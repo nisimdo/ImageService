@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,11 +17,14 @@ namespace ImageService.Modal
         #region Members
         private string m_OutputFolder;            // The Output Folder
         private int m_thumbnailSize;              // The Size Of The Thumbnail Size
+        private static Regex r = new Regex(":");    // The Regex To Get The Real Picture Date
+       
         #endregion
 
-        public ImageServiceModal(string outputFolder)
+        public ImageServiceModal(string outputFolder, int thumbnailSize)
         {
             m_OutputFolder = outputFolder;          // Storing the output folder
+            m_thumbnailSize = thumbnailSize;        // Stroing the Thumbnail Size
             CreateDirectory(m_OutputFolder);        // Creating the Output Folder
         }
 
@@ -87,9 +92,13 @@ namespace ImageService.Modal
         #region Assistance Functions
         private DateTime GetFileDate(string filePath)
         {
-            FileInfo info = new FileInfo(filePath);     // Creating the File Info for the File
-
-            return info.CreationTime;                   // Return the Creation Time Of The File
+            using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            using (Image myImage = Image.FromStream(fs, false, false))
+            {
+                PropertyItem propItem = myImage.GetPropertyItem(36867);
+                string dateTaken = r.Replace(Encoding.UTF8.GetString(propItem.Value), "-", 2);
+                return DateTime.Parse(dateTaken);
+            }
         }
 
         /// <summary>
@@ -113,7 +122,7 @@ namespace ImageService.Modal
             }
 
             Image image = Image.FromFile(imagePath);
-            Image thumb = image.GetThumbnailImage(120, 120, () => false, IntPtr.Zero);
+            Image thumb = image.GetThumbnailImage(m_thumbnailSize, m_thumbnailSize, () => false, IntPtr.Zero);
 
             fileName = Path.ChangeExtension(fileName, "thumb");     // Changing the Extension
             thumb.Save(Path.Combine(thumbnailFolder, fileName));     // Saving The Thumbnail

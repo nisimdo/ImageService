@@ -78,7 +78,8 @@ namespace ImageService
             eventLog1.Source = ConfigurationManager.AppSettings[ConfigurationInfrastructure.Node_SourceName];
             eventLog1.Log = ConfigurationManager.AppSettings[ConfigurationInfrastructure.Node_LogName];
 
-            IImageServiceModal modal = new ImageServiceModal(ConfigurationManager.AppSettings[ConfigurationInfrastructure.Node_OutputDir]);  // Creating the Service
+            IImageServiceModal modal = new ImageServiceModal(ConfigurationManager.AppSettings[ConfigurationInfrastructure.Node_OutputDir], 
+                int.Parse(ConfigurationManager.AppSettings[ConfigurationInfrastructure.Node_ThumbnailSize]));  // Creating the Service
             IImageController controller = new ImageController(modal);
             ILoggingService logging = new LoggingService();         // Creating The Logging Service
             logging.MessageRecieved += OnMessageRecieved;           // Adding the Upon Message Recieved

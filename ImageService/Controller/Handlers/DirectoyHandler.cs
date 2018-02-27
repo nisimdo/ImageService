@@ -73,7 +73,7 @@ namespace ImageService.Controller.Handlers
                     {
                         if (m_dirWatcher != null)
                         {
-                            m_dirWatcher.EnableRaisingEvents = false;      // 
+                            m_dirWatcher.EnableRaisingEvents = false;      
                         }
                         DirectoryClose?.Invoke(this, new DirectoryCloseEventArgs(m_path,
                             String.Format(MessageInfrastructure.INFO_CloseCommand, m_path)));

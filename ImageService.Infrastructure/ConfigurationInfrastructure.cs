@@ -12,5 +12,6 @@ namespace ImageService.Infrastructure
         public static readonly string Node_OutputDir = "OutputDir";             // The Directory of the output
         public static readonly string Node_SourceName ="SourceName";             // The Source Name of log
         public static readonly string Node_LogName = "LogName";             // The Source Name of log
+        public static readonly string Node_ThumbnailSize = "ThumbnailSize";     // The Thumnbail Size
     }
 }
